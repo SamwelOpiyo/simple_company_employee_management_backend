@@ -9,6 +9,11 @@ Employee management backend for companies.
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
      :target: https://github.com/ambv/black
      :alt: Black code style
+.. image:: https://travis-ci.org/SamwelOpiyo/simple_company_employee_management_backend.svg?branch=companies-application
+     :target: https://travis-ci.org/SamwelOpiyo/simple_company_employee_management_backend
+.. image:: https://coveralls.io/repos/github/SamwelOpiyo/simple_company_employee_management_backend/badge.svg?branch=master
+     :target: https://coveralls.io/github/SamwelOpiyo/simple_company_employee_management_backend?branch=master
+
 
 
 :License: MIT
@@ -100,6 +105,3 @@ Docker
 See detailed `cookiecutter-django Docker documentation`_.
 
 .. _`cookiecutter-django Docker documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
-
-
-

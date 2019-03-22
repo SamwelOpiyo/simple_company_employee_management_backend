@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
@@ -38,6 +38,16 @@ urlpatterns = [
     path("invitations/", include(invitation_backend().get_urls())),
     path("organization/", include("organizations.urls")),
     # Your stuff: custom urls includes go here
+    re_path(
+        f"^api/{API_PREFIX}/",
+        include(("employee_management_backend.users.api.urls", "api_users")),
+    ),
+    re_path(
+        f"^api/{API_PREFIX}/",
+        include(
+            ("employee_management_backend.companies.api.urls", "companies")
+        ),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Django Rest Swagger Views

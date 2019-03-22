@@ -33,3 +33,4 @@ env:
 
 script:
   - pytest
+  - coveralls

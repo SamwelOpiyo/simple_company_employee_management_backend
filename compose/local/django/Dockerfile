@@ -17,7 +17,8 @@ RUN apk update \
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements /requirements
-RUN pip install -r /requirements/local.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install -r /requirements/local.txt
 
 COPY ./compose/production/django/entrypoint /entrypoint
 COPY ./compose/local/django/start /start
