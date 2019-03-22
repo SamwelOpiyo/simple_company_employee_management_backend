@@ -75,6 +75,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "employee_management_backend.users.apps.UsersAppConfig",
     # Your stuff: custom apps go here
+    "employee_management_backend.companies.apps.CompaniesConfig",
+    "employee_management_backend.companies2.apps.Companies2Config",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -202,11 +204,15 @@ FIXTURE_DIRS = (str(APPS_DIR.path("fixtures")),)
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#session-cookie-httponly
-SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = env.bool(
+    "DJANGO_SESSION_COOKIE_HTTPONLY", default=True
+)
 # https://docs.djangoproject.com/en/dev/ref/settings/#csrf-cookie-httponly
-CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = env.bool("DJANGO_CSRF_COOKIE_HTTPONLY", default=True)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-browser-xss-filter
-SECURE_BROWSER_XSS_FILTER = True
+SECURE_BROWSER_XSS_FILTER = env.bool(
+    "DJANGO_SECURE_BROWSER_XSS_FILTER", default=True
+)
 # https://docs.djangoproject.com/en/dev/ref/settings/#x-frame-options
 X_FRAME_OPTIONS = "DENY"
 
@@ -290,6 +296,10 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
 }
+
+# Django Organizations
+# ------------------------------------------------------------------------------
+ORGS_SLUGFIELD = "django_extensions.db.fields.AutoSlugField"
 
 # Your stuff...
 # ------------------------------------------------------------------------------

@@ -1,9 +1,17 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
+
+from rest_framework.authtoken import views
+from rest_framework_swagger.views import get_swagger_view
+from rest_framework.documentation import include_docs_urls
+
+from organizations.backends import invitation_backend
+
+API_PREFIX = "(?P<version>(v1|v2))"
 
 urlpatterns = [
     path(
@@ -22,8 +30,30 @@ urlpatterns = [
         include("employee_management_backend.users.urls", namespace="users"),
     ),
     path("accounts/", include("allauth.urls")),
+    # Django Rest Framework URLs
+    path("api/docs/", include_docs_urls(title="Devops API", public=False)),
+    path("api/auth/", include("rest_framework.urls")),
+    path("api/token/", views.obtain_auth_token),
+    # Django organizations
+    path("invitations/", include(invitation_backend().get_urls())),
+    path("organization/", include("organizations.urls")),
     # Your stuff: custom urls includes go here
+    re_path(
+        f"^api/{API_PREFIX}/",
+        include(("employee_management_backend.users.api.urls", "api_users")),
+    ),
+    re_path(
+        f"^api/{API_PREFIX}/",
+        include(
+            ("employee_management_backend.companies.api.urls", "companies")
+        ),
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Django Rest Swagger Views
+schema_view = get_swagger_view(title="Employee Management API")
+
+urlpatterns += [path("api/schema/", schema_view)]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
