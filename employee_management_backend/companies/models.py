@@ -60,5 +60,7 @@ class TeamMember(models.Model):
 
     def __str__(self):
         return "Organization: {} Team: {} Team Member: {}".format(
-            self.team.organization.name, self.team.name, self.user.username
+            self.team.organization.name,
+            self.team.name,
+            self.organization_user.user.username,
         )
