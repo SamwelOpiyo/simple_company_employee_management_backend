@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "employee_management_backend.users.apps.UsersAppConfig",
     # Your stuff: custom apps go here
+    "employee_management_backend.companies.apps.CompaniesConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -290,6 +291,10 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.URLPathVersioning",
     "EXCEPTION_HANDLER": "rest_framework.views.exception_handler",
 }
+
+# Django Organizations
+# ------------------------------------------------------------------------------
+ORGS_SLUGFIELD = "django_extensions.db.fields.AutoSlugField"
 
 # Your stuff...
 # ------------------------------------------------------------------------------

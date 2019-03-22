@@ -27,3 +27,4 @@ django-filter==2.0.0  # https://github.com/carltongibson/django-filter
 # Other
 # ------------------------------------------------------------------------------
 django-organizations==1.1.1  # https://github.com/bennylope/django-organizations/
+django-extensions==2.1.6  # https://github.com/django-extensions/django-extensions

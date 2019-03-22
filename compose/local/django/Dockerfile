@@ -20,26 +20,22 @@ COPY ./requirements /requirements
 RUN pip install -r /requirements/local.txt
 
 COPY ./compose/production/django/entrypoint /entrypoint
-COPY ./compose/production/django/start /start
-COPY ./compose/production/django/celery/worker/start /start-celeryworker
-COPY ./compose/production/django/celery/beat/start /start-celerybeat
-COPY ./compose/production/django/celery/flower/start /start-flower
+COPY ./compose/local/django/start /start
+COPY ./compose/local/django/celery/worker/start /start-celeryworker
+COPY ./compose/local/django/celery/beat/start /start-celerybeat
+COPY ./compose/local/django/celery/flower/start /start-flower
 
 RUN sed -i 's/\r//' /entrypoint \
     && chmod +x /entrypoint \
-    && chown django /entrypoint \
       # Prepare Django Start Script.
     && sed -i 's/\r//' /start \
     && chmod +x /start \
-    && chown django /start \
       # Prepare Celery Worker Start Script.
     && sed -i 's/\r//' /start-celeryworker \
     && chmod +x /start-celeryworker \
-    && chown django /start-celeryworker \
       # Prepare Celery Beat Start Script.
     && sed -i 's/\r//' /start-celerybeat \
     && chmod +x /start-celerybeat \
-    && chown django /start-celerybeat \
       # Prepare Celery Flower Start Script.
     && sed -i 's/\r//' /start-flower \
     && chmod +x /start-flower
