@@ -90,7 +90,8 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     ## create:
     * POST Organization details Endpoint.
     * Creates an organization and adds the authenticated user that has created
-      the organization as an organization user and organization owner.
+      the organization as an organization user and organization owner if he/she
+      is a staff member.
     ### Returns
     * Created Organization with status rest_framework.status.HTTP_201_CREATED.
     ### Raises
@@ -98,6 +99,8 @@ class OrganizationViewSet(viewsets.ModelViewSet):
         * If request is from anonymous user.
     * status.HTTP_400_BAD_REQUEST
         * If post data for POST request is not valid.
+    * status.HTTP_403_FORBIDDEN
+        * If user trying to create the organization is not a staff member.
 
     ## update:
     * PUT/PATCH Organization details Endpoint.
@@ -120,7 +123,7 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     ## destroy:
     * DELETE Organization details Endpoint.
     * Used to delete an Organization Object if the authenticated user trying to
-      delete the organization is the organization owner.
+      delete the organization is a staff member.
     ### Returns
     * Empty with status rest_framework.status.HTTP_204_NO_CONTENT.
     ### Raises
@@ -152,13 +155,20 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        # Adds the first user as an organization user and organization owner.
-        serializer.instance.get_or_add_user(request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+        if request.user.is_staff:
+            self.perform_create(serializer)
+            # Adds the first user as an organization user and organization owner.
+            serializer.instance.get_or_add_user(request.user)
+            headers = self.get_success_headers(serializer.data)
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED,
+                headers=headers,
+            )
+        else:
+            raise exceptions.PermissionDenied(
+                "Only Staff Members can create an organization!"
+            )
 
     def update(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -187,11 +197,11 @@ class OrganizationViewSet(viewsets.ModelViewSet):
     def destroy(self, request, pk=None, *args, **kwargs):
         if request.user.is_authenticated:
             organization = get_object_or_404(self.get_queryset(), id=pk)
-            if organization.owner.organization_user.user == request.user:
+            if request.user.is_staff:
                 organization.delete()
             else:
                 raise exceptions.PermissionDenied(
-                    "User is not allowed to delete this organization!"
+                    "Only Staff Members can delete an organization!"
                 )
 
             return Response(status=status.HTTP_204_NO_CONTENT)
